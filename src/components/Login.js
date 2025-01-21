@@ -1,11 +1,64 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Header from "./Header";
+import { checkValidData } from "../utils/validate";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "../utils/firebase";
 
 const Login = () => {
   const [isSignInForm, setIsSignInForm] = useState(true);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const email = useRef(null);
+  const password = useRef(null);
 
   const toggleSignInForm = () => {
     setIsSignInForm(!isSignInForm);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Validate the form data
+    const message = checkValidData(email.current.value, password.current.value);
+    setErrorMessage(message);
+    if (message) return;
+
+    //Sign In Sign up logic
+    if (!isSignInForm) {
+      //Sign up logic
+      createUserWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log(user);
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + "-" + errorMessage);
+        });
+    } else {
+      //sign in logic
+      signInWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          const user = userCredential.user;
+          console.log(user);
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + "-" + errorMessage);
+        });
+    }
   };
 
   return (
@@ -20,7 +73,10 @@ const Login = () => {
         <div className="absolute inset-0 bg-black bg-opacity-60"></div>
       </div>
       <div className="flex items-center justify-center h-full relative z-10">
-        <form className="px-10 py-20 bg-black bg-opacity-70 text-white rounded-md w-96">
+        <form
+          onSubmit={handleSubmit} // Changed to handle submit
+          className="px-10 py-20 bg-black bg-opacity-70 text-white rounded-md w-96"
+        >
           <h1 className="self-start text-3xl font-bold mb-6">
             {isSignInForm ? "Sign In" : "Sign up"}
           </h1>
@@ -32,28 +88,35 @@ const Login = () => {
             />
           )}
           <input
+            ref={email}
             type="email"
             placeholder="Email address"
             className="w-full mb-4 bg-black bg-opacity-20 border border-white text-white p-4"
           />
           <input
+            ref={password}
             type="password"
             placeholder="Password"
             className="w-full p-4 mb-6 bg-black bg-opacity-20 border border-white text-white"
           />
-          {
-            !isSignInForm && <input
-            type="password"
-            placeholder="Confirm Password"
-            className="w-full p-4 mb-6 bg-black bg-opacity-20 border border-white text-white"
-          />
-          }
-          <button className="w-full p-2 bg-red-600 rounded-md text-white font-semibold hover:bg-red-700 transition">
+          {!isSignInForm && (
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              className="w-full p-4 mb-6 bg-black bg-opacity-20 border border-white text-white"
+            />
+          )}
+          {errorMessage && (
+            <p className="text-red-500 py-2">{errorMessage}</p> // Error message handling
+          )}
+          <button
+            type="submit" // Use 'submit' type to trigger form submission
+            className="w-full p-2 bg-red-600 rounded-md text-white font-semibold hover:bg-red-700 transition"
+          >
             {isSignInForm ? "Sign In" : "Sign up"}
           </button>
           <p className="py-4 text-gray-400">
             {isSignInForm ? "New to Netflix? " : "Already a user? "}
-
             <span
               className="cursor-pointer hover:underline text-white"
               onClick={toggleSignInForm}
