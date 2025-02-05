@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
 import { API_OPTIONS } from "../utils/constants";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addPopularTVSeries } from "../utils/movieSlice";
 const usePopularTVSeries = () => {
   const dispatch = useDispatch();
-
+  const popularTVSeries = useSelector((store) => store.movies.popularTVSeries);
   useEffect(() => {
-    getPopularTVSeries();
+    if (!popularTVSeries) {
+      getPopularTVSeries();
+    }
   }, []);
   const getPopularTVSeries = async () => {
     const data = await fetch(

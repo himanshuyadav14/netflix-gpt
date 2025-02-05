@@ -4,7 +4,6 @@ import GPTMovieSuggestions from "./GPTMovieSuggestions";
 import {BG_URL} from "../utils/constants"
 
 const GPTSearch = () => {
-  console.log(process.env.REACT_APP_OPENAI_KEY);
   return (
     <div>
       <div className="fixed inset-0 -z-20">
