@@ -4,9 +4,10 @@ import GPTMovieSuggestions from "./GPTMovieSuggestions";
 import {BG_URL} from "../utils/constants"
 
 const GPTSearch = () => {
+  console.log(process.env.REACT_APP_OPENAI_KEY);
   return (
     <div>
-      <div className="absolute inset-0 -z-20">
+      <div className="fixed inset-0 -z-20">
         <img
           src={BG_URL}
           alt=""
