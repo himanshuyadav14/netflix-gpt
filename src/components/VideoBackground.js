@@ -8,7 +8,7 @@ const VideoBackground = ({ movieId }) => {
   return (
     <div className="w-screen">
       <iframe
-        class="w-full aspect-video"
+        className="w-full aspect-video"
         src={`https://www.youtube.com/embed/${trailer?.key}?&amp;autoplay=1&amp;mute=1&amp;controls=0&amp;loop=1&amp;`}
         title="Movie Trailer"
         vq="hd720"
