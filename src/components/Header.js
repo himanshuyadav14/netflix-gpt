@@ -16,7 +16,7 @@ const Header = () => {
   const user = useSelector((store) => store.user);
   const showGptSearch = useSelector((store) => store.gpt.showGptSearch);
   const langKey = useSelector((store) => store.config.lang);
-  
+
   const [selectedLang, setSelectedLang] = useState(langKey);
 
   useEffect(() => {
@@ -55,13 +55,16 @@ const Header = () => {
   };
 
   return (
-    <div className="absolute px-40 w-screen py-2 bg-gradient-to-b from-black z-20 flex justify-between">
-      <img className="w-44" src={LOGO} alt="logo" />
+    <div className="absolute w-full px-6 md:px-20 py-3 bg-gradient-to-b from-black z-20 flex flex-col md:flex-row justify-between items-center">
+      {/* Logo */}
+      <img className="w-32 md:w-44 mx-auto md:mx-0" src={LOGO} alt="logo" />
+
       {user && (
-        <div className="flex p-2 justify-between items-center">
+        <div className="flex flex-wrap justify-center md:justify-end items-center gap-4">
+          {/* Language Selector (only visible when GPT search is active) */}
           {showGptSearch && (
             <select
-              className="p-2 bg-gray-900 text-white m-2"
+              className="p-2 bg-gray-900 text-white rounded-md"
               value={selectedLang}
               onChange={handleLanguageChange}
             >
@@ -72,16 +75,22 @@ const Header = () => {
               ))}
             </select>
           )}
+
+          {/* GPT Search Button */}
           <button
             onClick={handleGPTSearch}
-            className="py-3 px-4 mx-4 my-2 bg-purple-800 text-white rounded-lg"
+            className="py-2 px-4 bg-purple-800 text-white rounded-lg text-sm md:text-base"
           >
-            {showGptSearch ?  "Home Page" : "GPT Search"}
+            {showGptSearch ? "Home Page" : "GPT Search"}
           </button>
-          <img className="w-12 h-12" src={USER_ICON} alt="usericon" />
+
+          {/* User Icon */}
+          <img className="w-10 h-10 md:w-12 md:h-12" src={USER_ICON} alt="user icon" />
+
+          {/* Sign Out Button */}
           <button
             onClick={handleSignOut}
-            className="bg-black text-white w-20 h-10"
+            className="bg-black text-white px-4 py-2 rounded-md text-sm md:text-base"
           >
             Sign out
           </button>

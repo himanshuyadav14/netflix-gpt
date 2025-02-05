@@ -12,9 +12,7 @@ const GPTSearchBar = () => {
 
   const searchMovieTMDB = async (movie) => {
     const data = await fetch(
-      "https://api.themoviedb.org/3/search/movie?query=" +
-        movie +
-        "&include_adult=false&language=en-US&page=1",
+      `https://api.themoviedb.org/3/search/movie?query=${movie}&include_adult=false&language=en-US&page=1`,
       API_OPTIONS
     );
 
@@ -23,35 +21,28 @@ const GPTSearchBar = () => {
   };
 
   const handleGPTSearchClick = async () => {
-    const gptQuery =
-      "Act as a Movie Recommendation system and suggest some movies for the query : " +
-      searchText.current.value +
-      ". only give me names of 5 movies, comma separated. like the example result given ahead. Example result : Gadar, Sholay, Don, Golmaal, Koi Mil Gaya";
+    const gptQuery = `Act as a Movie Recommendation system and suggest some movies for the query: "${searchText.current.value}". Only give me names of 5 movies, comma separated. Example result: Gadar, Sholay, Don, Golmaal, Koi Mil Gaya`;
 
     try {
       const gptResults = await openai.chat.completions.create({
         messages: [{ role: "user", content: gptQuery }],
-        model: "gpt-4o-mini", // Ensure the model is available
+        model: "gpt-4o-mini",
       });
 
-      if (
-        !gptResults ||
-        !gptResults.choices ||
-        gptResults.choices.length === 0
-      ) {
+      if (!gptResults?.choices?.length) {
         throw new Error("No choices returned from GPT");
       }
 
       const gptMovies = gptResults.choices[0]?.message?.content
         .split(",")
         .map((movie) => movie.trim());
-      if (!gptMovies || gptMovies.length === 0) {
+
+      if (!gptMovies.length) {
         throw new Error("No valid movie suggestions returned");
       }
 
       const promiseArray = gptMovies.map((movie) => searchMovieTMDB(movie));
       const tmdbResult = await Promise.all(promiseArray);
-
 
       dispatch(
         addGPTMovieResult({ movieNames: gptMovies, movieResults: tmdbResult })
@@ -63,20 +54,23 @@ const GPTSearchBar = () => {
   };
 
   return (
-    <div className="pt-[10%] flex justify-center">
+    <div className="flex justify-center px-4 w-[400px] md:w-[800px]">
       <form
-        className="bg-black w-1/2 rounded-lg grid grid-cols-12"
+        className="bg-black w-full max-w-lg rounded-lg flex flex-col sm:flex-row items-center p-3"
         onSubmit={(e) => e.preventDefault()}
       >
+        {/* Input Field */}
         <input
           ref={searchText}
           type="text"
-          className="p-4 m-4 col-span-9 "
+          className="w-full sm:w-auto flex-1 p-3 m-2 rounded-md text-black"
           placeholder={lang[langKey].gptSearchPlaceholder}
         />
+
+        {/* Search Button */}
         <button
           onClick={handleGPTSearchClick}
-          className="m-4 col-span-3 py-2 px-4 bg-red-700 text-white rounded-lg"
+          className="w-full sm:w-auto px-6 py-3 m-2 bg-red-700 text-white rounded-lg"
         >
           {lang[langKey].search}
         </button>
