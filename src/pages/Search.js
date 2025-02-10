@@ -24,15 +24,18 @@ const Search = () => {
   };
 
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, [skinOpacity]);
 
   return (
     <div className="search-page">
-      <div className={`bg-skin w-full h-[430px] absolute top-0 -z-0 bg-gradient-to-b from-indigo-800 to-[#141414] transition-colors`} style={{ opacity: `${skinOpacity}` }}></div>
+      <div
+        className={`bg-skin w-full h-[430px] absolute top-0 -z-0 bg-gradient-to-b from-indigo-800 to-[#141414] transition-colors`}
+        style={{ opacity: `${skinOpacity}` }}
+      ></div>
       <div className="search relative">
         <GptSearchBar searchOpacity={searchOpacity} />
         <div className="mt-3 px-4 md:px-12 py-3 min-h-[700px]">
@@ -40,8 +43,7 @@ const Search = () => {
         </div>
       </div>
     </div>
-
-  )
-}
+  );
+};
 
 export default Search;
