@@ -1,14 +1,23 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import lang from "../utils/languageConstants";
 import { useSelector, useDispatch } from "react-redux";
 import openai from "../utils/openai";
 import { API_OPTIONS } from "../utils/constants";
 import { addGPTMovieResult } from "../utils/gptSlice";
 
+const MAX_SEARCHES = 5; // Maximum number of searches allowed
+
 const GPTSearchBar = () => {
   const dispatch = useDispatch();
   const langKey = useSelector((store) => store.config.lang);
   const searchText = useRef(null);
+  const [searchCount, setSearchCount] = useState(
+    Number(localStorage.getItem("searchCount")) || 0
+  );
+
+  useEffect(() => {
+    localStorage.setItem("searchCount", searchCount);
+  }, [searchCount]);
 
   const searchMovieTMDB = async (movie) => {
     const data = await fetch(
@@ -21,6 +30,8 @@ const GPTSearchBar = () => {
   };
 
   const handleGPTSearchClick = async () => {
+    if (searchCount >= MAX_SEARCHES) return;
+
     const gptQuery = `Act as a Movie Recommendation system and suggest some movies for the query: "${searchText.current.value}". Only give me names of 5 movies, comma separated. Example result: Gadar, Sholay, Don, Golmaal, Koi Mil Gaya`;
 
     try {
@@ -47,14 +58,15 @@ const GPTSearchBar = () => {
       dispatch(
         addGPTMovieResult({ movieNames: gptMovies, movieResults: tmdbResult })
       );
+
+      setSearchCount((prev) => prev + 1); // Increment search count
     } catch (error) {
       console.error("Error fetching movie data:", error);
-      // TODO: Show a user-friendly error message or fallback UI
     }
   };
 
   return (
-    <div className="flex justify-center px-4 w-[400px] md:w-[800px]">
+    <div className="flex flex-col items-center px-4 w-[400px] md:w-[800px]">
       <form
         className="bg-black w-full max-w-lg rounded-lg flex flex-col sm:flex-row items-center p-3"
         onSubmit={(e) => e.preventDefault()}
@@ -65,16 +77,29 @@ const GPTSearchBar = () => {
           type="text"
           className="w-full sm:w-auto flex-1 p-3 m-2 rounded-md text-black"
           placeholder={lang[langKey].gptSearchPlaceholder}
+          disabled={searchCount >= MAX_SEARCHES} // Disable if limit reached
         />
 
         {/* Search Button */}
         <button
           onClick={handleGPTSearchClick}
-          className="w-full sm:w-auto px-6 py-3 m-2 bg-red-700 text-white rounded-lg"
+          className={`w-full sm:w-auto px-6 py-3 m-2 rounded-lg ${
+            searchCount >= MAX_SEARCHES
+              ? "bg-gray-500 cursor-not-allowed"
+              : "bg-red-700 text-white hover:bg-red-800"
+          }`}
+          disabled={searchCount >= MAX_SEARCHES}
         >
-          {lang[langKey].search}
+          {searchCount >= MAX_SEARCHES ? "Limit Reached" : lang[langKey].search}
         </button>
       </form>
+
+      {/* Remaining Searches Display */}
+      <p className="text-white mt-2 text-sm">
+        {searchCount < MAX_SEARCHES
+          ? `Remaining Searches: ${MAX_SEARCHES - searchCount}`
+          : "You have reached the search limit. Try again later!"}
+      </p>
     </div>
   );
 };
