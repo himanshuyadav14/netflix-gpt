@@ -19,7 +19,7 @@ const Browse = () => {
   usePopularTVSeries();
   return (
     <div>
-      <Header />
+      <Header isBlack={!showGptSearch} />
       {showGptSearch ? (
         <GPTSearch />
       ) : (

@@ -10,7 +10,7 @@ import { toggleGptSearchView } from "../utils/gptSlice";
 import { SUPPORTED_LANGUAGES } from "../utils/constants";
 import { changeLanguage } from "../utils/configSlice";
 
-const Header = () => {
+const Header = ({ isBlack }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
@@ -55,7 +55,11 @@ const Header = () => {
   };
 
   return (
-    <div className="absolute w-full px-6 md:px-20 py-3 bg-gradient-to-b from-black z-20 flex flex-col md:flex-row justify-between items-center">
+    <div
+      className={`absolute w-full px-6 md:px-20 py-3 ${
+        isBlack ? "bg-black" : "bg-gradient-to-b from-black"
+      } z-20 flex flex-col md:flex-row justify-between items-center`}
+    >
       {/* Logo */}
       <img className="w-32 md:w-44 mx-auto md:mx-0" src={LOGO} alt="logo" />
 
@@ -85,7 +89,11 @@ const Header = () => {
           </button>
 
           {/* User Icon */}
-          <img className="w-10 h-10 md:w-12 md:h-12" src={USER_ICON} alt="user icon" />
+          <img
+            className="w-10 h-10 md:w-12 md:h-12"
+            src={USER_ICON}
+            alt="user icon"
+          />
 
           {/* Sign Out Button */}
           <button
