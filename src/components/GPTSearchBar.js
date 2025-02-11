@@ -6,7 +6,7 @@ import { setGptSearch } from "../stores/searchSlice";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 
-const GptSearchBar = ({ searchOpacity }) => {
+const GPTSearchBar = ({ searchOpacity }) => {
   const userEmail = useSelector((store) => store?.user?.email);
   const [user, setUser] = useState(userEmail);
   const [loadingBtn, setLoadingBtn] = useState(false);
@@ -157,4 +157,4 @@ const GptSearchBar = ({ searchOpacity }) => {
   );
 };
 
-export default GptSearchBar;
+export default GPTSearchBar;
