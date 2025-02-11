@@ -1,6 +1,6 @@
 import SearchResult from "../components/SearchResult";
 import { useEffect, useState } from "react";
-import GptSearchBar from "../components/GptSearchBar.js";
+import GPTSearchBar from "../components/GptSearchBar.js";
 
 const Search = () => {
   const [skinOpacity, setSkinOpacity] = useState(1);
@@ -37,7 +37,7 @@ const Search = () => {
         style={{ opacity: `${skinOpacity}` }}
       ></div>
       <div className="search relative">
-        <GptSearchBar searchOpacity={searchOpacity} />
+        <GPTSearchBar searchOpacity={searchOpacity} />
         <div className="mt-3 px-4 md:px-12 py-3 min-h-[700px]">
           <SearchResult />
         </div>
