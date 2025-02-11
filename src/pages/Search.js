@@ -1,6 +1,6 @@
 import SearchResult from "../components/SearchResult";
 import { useEffect, useState } from "react";
-import GptSearchBar from "../components/GptSearchBar";
+import GptSearchBar from "../components/GptSearchBar.js";
 
 const Search = () => {
   const [skinOpacity, setSkinOpacity] = useState(1);
