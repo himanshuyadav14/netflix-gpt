@@ -36,40 +36,20 @@ const GPTSearchBar = ({ searchOpacity }) => {
 
   const handleSearch = async () => {
     setLoadingBtn(true);
-    if (user === "gpt4@gmail.com") {
-      try {
-        const prompt = `
+    // if (user === "gpt4@gmail.com") {
+    try {
+      const prompt = `
         Act as a movie recommendation system and suggest some movies for the query : ${searchPrompt}.
         Only give me name of 5 movies with comma seperated.
         result should always look like - Spider Man, Elemental, Phir Hera Pheri
       `;
-        const gptResponse = await openai.chat.completions.create({
-          messages: [{ role: "user", content: prompt }],
-          model: "gpt-3.5-turbo",
-        });
+      const gptResponse = await openai.chat.completions.create({
+        messages: [{ role: "user", content: prompt }],
+        model: "gpt-4o-mini",
+      });
 
-        const gptResults =
-          gptResponse?.choices[0]?.message?.content.split(", ");
-        const data = gptResults.map((query) => searchMovies("movie", query));
-        const searchResults = await Promise.all(data);
-
-        if (searchResults) {
-          setLoadingBtn(false);
-        }
-
-        dispatch(
-          setGptSearch({ searchResults: gptResults, actionType: "gptResults" })
-        );
-        dispatch(
-          setGptSearch({ searchResults: searchResults, actionType: "movies" })
-        );
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    } else {
-      // GPT will not work for all user
-      const searchTerm = [searchPrompt];
-      const data = searchTerm.map((query) => searchMovies("movie", query));
+      const gptResults = gptResponse?.choices[0]?.message?.content.split(", ");
+      const data = gptResults.map((query) => searchMovies("movie", query));
       const searchResults = await Promise.all(data);
 
       if (searchResults) {
@@ -77,12 +57,31 @@ const GPTSearchBar = ({ searchOpacity }) => {
       }
 
       dispatch(
-        setGptSearch({ searchResults: searchTerm, actionType: "gptResults" })
+        setGptSearch({ searchResults: gptResults, actionType: "gptResults" })
       );
       dispatch(
         setGptSearch({ searchResults: searchResults, actionType: "movies" })
       );
+    } catch (error) {
+      console.error("Error:", error);
     }
+    // } else {
+    //   // GPT will not work for all user
+    //   const searchTerm = [searchPrompt];
+    //   const data = searchTerm.map((query) => searchMovies("movie", query));
+    //   const searchResults = await Promise.all(data);
+
+    //   if (searchResults) {
+    //     setLoadingBtn(false);
+    //   }
+
+    //   dispatch(
+    //     setGptSearch({ searchResults: searchTerm, actionType: "gptResults" })
+    //   );
+    //   dispatch(
+    //     setGptSearch({ searchResults: searchResults, actionType: "movies" })
+    //   );
+    // }
   };
 
   return (
@@ -139,7 +138,7 @@ const GPTSearchBar = ({ searchOpacity }) => {
               )}
             </button>
           </div>
-          <p className="text-xs mt-1">
+          {/* <p className="text-xs mt-1">
             Note: Movie recommendations powered by GPT are available on request
             due to paid APIs.
             <a
@@ -150,7 +149,7 @@ const GPTSearchBar = ({ searchOpacity }) => {
             >
               Request now
             </a>
-          </p>
+          </p> */}
         </form>
       </div>
     </>
