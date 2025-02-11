@@ -143,7 +143,7 @@ const GptSearchBar = ({ searchOpacity }) => {
             Note: Movie recommendations powered by GPT are available on request
             due to paid APIs.
             <a
-              href="https://www.linkedin.com/in/okneerajsingh/"
+              href="https://www.linkedin.com/in/himanshuyadav14/"
               target="_blank"
               rel="noreferrer"
               className="ml-2 text-sm text-gray-400 hover:text-gray-200"

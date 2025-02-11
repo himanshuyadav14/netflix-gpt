@@ -18,13 +18,13 @@ const Footer = () => {
               <a href="#!" className="mr-4 hover:underline md:mr-6">Privacy Policy</a>
             </li>
             <li>
-              <a href="https://www.linkedin.com/in/okneerajsingh/" target='_blank' rel='noreferrer' className="hover:underline">Contact</a>
+              <a href="https://www.linkedin.com/in/himanshuyadav14/" target='_blank' rel='noreferrer' className="hover:underline">Contact</a>
             </li>
           </ul>
         </div>
         <hr className="my-6 sm:mx-auto border-[#282727] lg:my-8" />
         <span className="block text-sm text-gray-500 text-center dark:text-gray-400">
-          Crafted By <a href="https://www.linkedin.com/in/okneerajsingh/" rel='noreferrer' target='_blank' className="text-white hover:underline">Neeraj Singh</a>
+          Crafted By <a href="https://www.linkedin.com/in/himanshuyadav14/" rel='noreferrer' target='_blank' className="text-white hover:underline">Himanshu Yadav</a>
         </span>
       </div>
     </footer>
