@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import openai from "../services/openai";
 import { TMDB_API_URL, TMDB_OPTIONS } from "../services/tmdb";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,12 +6,22 @@ import { setGptSearch } from "../stores/searchSlice";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import CloseIcon from "@mui/icons-material/Close";
 
+const MAX_SEARCHES = 5;
+
 const GPTSearchBar = ({ searchOpacity }) => {
   const userEmail = useSelector((store) => store?.user?.email);
   const [user, setUser] = useState(userEmail);
   const [loadingBtn, setLoadingBtn] = useState(false);
   const [searchPrompt, setSearchPrompt] = useState("");
+  const [remainingSearches, setRemainingSearches] = useState(MAX_SEARCHES); // UI state
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Get the remaining searches from localStorage on mount
+    let searchCount = localStorage.getItem("gptSearchCount") || 0;
+    searchCount = parseInt(searchCount, 10);
+    setRemainingSearches(MAX_SEARCHES - searchCount);
+  }, []);
 
   const handlePrompt = (event) => {
     setSearchPrompt(event.target.value);
@@ -35,12 +45,20 @@ const GPTSearchBar = ({ searchOpacity }) => {
   };
 
   const handleSearch = async () => {
+    let searchCount = localStorage.getItem("gptSearchCount") || 0;
+    searchCount = parseInt(searchCount, 10);
+
+    if (searchCount >= MAX_SEARCHES) {
+      alert("Search limit reached! Please try again later.");
+      return;
+    }
+
     setLoadingBtn(true);
-    // if (user === "gpt4@gmail.com") {
+
     try {
       const prompt = `
         Act as a movie recommendation system and suggest some movies for the query : ${searchPrompt}.
-        Only give me name of 5 movies with comma seperated.
+        Only give me name of 5 movies with comma separated.
         result should always look like - Spider Man, Elemental, Phir Hera Pheri
       `;
       const gptResponse = await openai.chat.completions.create({
@@ -62,26 +80,13 @@ const GPTSearchBar = ({ searchOpacity }) => {
       dispatch(
         setGptSearch({ searchResults: searchResults, actionType: "movies" })
       );
+
+      // Increment search count and update remaining searches
+      localStorage.setItem("gptSearchCount", searchCount + 1);
+      setRemainingSearches(MAX_SEARCHES - (searchCount + 1)); // Update UI
     } catch (error) {
       console.error("Error:", error);
     }
-    // } else {
-    //   // GPT will not work for all user
-    //   const searchTerm = [searchPrompt];
-    //   const data = searchTerm.map((query) => searchMovies("movie", query));
-    //   const searchResults = await Promise.all(data);
-
-    //   if (searchResults) {
-    //     setLoadingBtn(false);
-    //   }
-
-    //   dispatch(
-    //     setGptSearch({ searchResults: searchTerm, actionType: "gptResults" })
-    //   );
-    //   dispatch(
-    //     setGptSearch({ searchResults: searchResults, actionType: "movies" })
-    //   );
-    // }
   };
 
   return (
@@ -124,7 +129,7 @@ const GPTSearchBar = ({ searchOpacity }) => {
             <button
               className={`py-4 md:py-6 w-24 px-2 md:px-5 flex items-center justify-center bg-red-primary rounded text-white disabled:bg-red-800`}
               onClick={handleSearch}
-              disabled={searchPrompt === "" ? true : false}
+              disabled={searchPrompt === "" || remainingSearches <= 0}
             >
               {loadingBtn ? (
                 <div className="w-5 h-5 border-t m border-gray-300 border-solid rounded-full animate-spin"></div>
@@ -138,18 +143,19 @@ const GPTSearchBar = ({ searchOpacity }) => {
               )}
             </button>
           </div>
-          {/* <p className="text-xs mt-1">
-            Note: Movie recommendations powered by GPT are available on request
-            due to paid APIs.
-            <a
-              href="https://www.linkedin.com/in/himanshuyadav14/"
-              target="_blank"
-              rel="noreferrer"
-              className="ml-2 text-sm text-gray-400 hover:text-gray-200"
-            >
-              Request now
-            </a>
-          </p> */}
+
+          {/* Display remaining searches */}
+          <p className="text-xs mt-1">
+            {remainingSearches > 0 ? (
+              `You have ${remainingSearches} searches left.`
+            ) : (
+              <span className="text-red-400">Search limit reached!</span>
+            )}
+          </p>
+
+          <p className="text-xs mt-1">
+            Note: Movie recommendations powered by GPT are available only for limited times due to paid APIs.
+          </p>
         </form>
       </div>
     </>
