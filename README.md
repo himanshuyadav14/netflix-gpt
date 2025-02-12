@@ -1,110 +1,128 @@
-# Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-
 # Netflix GPT
 
-- create react app
-- configure tailwindcss
-- Header
-- Routing of app
-- login form
-- signup form
-- user validation
-- useRef hook
-- firebase setup
-- deploying our app to production
-- create signup user account
-- Implement Sign in user api
-- create redux store with userSlice
-- Implemented signout
-- update profile
-- BUGFIX - signup user displayname
-- BUGFIX - id the user is not logged in Redirect "/browse" to "/" login page
-- Unsubscribed to the onAuthStateChange callback 
-- Add hardcoded values to constants
-- Fetch movies from TMDB
+Movies recomandation with AI.
 
+## Setup
 
-# Features
+- Install react app using create-react-app (CRA)
 
-- Login/Signup
-  - Signin / Signup Form
-  - Redirect to Homepage
-- Browser (after authentication)
-  - Header
-    - Main movies
-    - Trailer in background
-    - Tilte description and buttons
-    - Movie Suggesiton
-    - movieList (vertical scroll)
+```js
+npx create-react-app netflix-gpt
+```
+
+- Create `.env` file and put configure
+
+```js
+REACT_APP_BASE_URL = YOUR_APPLICATION_BASE_URL;
+REACT_APP_FIREBASE_KEY = YOUR_FIREBASE_KEY_WILL_HERE;
+REACT_APP_FIREBASE_APP_ID = YOUR_FIREBASE_APP_ID_WILL_HERE;
+REACT_APP_OPENAI_KEY = YOUR_API_KEY_WILL_HERE;
+REACT_APP_TMDB_KEY = YOUR_API_KEY_WILL_HERE;
+```
+
+- Install and init tailwind css
+
+```js
+npm install -D tailwindcss
+npx tailwindcss init
+```
+
+- Configure tailwind css in your project
+
+  `npx tailwindcss init` command will create a file `tailwind.config.js` in your project's root directory.
+  Open `tailwind.config.js` and replace all content with below code.
+
+```js
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
+
+- Add the @tailwind directives for each of Tailwind’s layers to your ./src/index.css file.
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+- Now you created a react app with tailwind css successfully. Now run the below command on your terminal to start your local development server.
+
+```js
+npm start
+```
+
+## Features
+
+- Home Page (is user !authorised)
+
+  - Signin/Signup Page
+    - SignInForm / SignUpForm
+
+- Browse Page
+
+  - Navbar
+  - Showcase
+  - Trendings
+  - MoviesSuggestion
+    - MoviesList \* N
+
 - NetflixGPT
-  - Search Bar
-  - Movie Suggestions
+  - Search
+  - MoviesSuggestion
+
+## Screen Shot
+
+Live Demo : [Live Demo](https://netflixgptai.vercel.app/ "Live Demo")
+
+## Screen Shot
+
+- Landing Page
+
+  ![Landing Page](https://raw.githubusercontent.com/himanshuyadav14/netflix-gpt/refs/heads/master/public/screenshot/01-Landing.png)
+
+- Signin Page
+
+  ![Signin Page](https://raw.githubusercontent.com/himanshuyadav14/netflix-gpt/refs/heads/master/public/screenshot/02-Signin.png)
+
+- Signup Page
+
+  ![Signup Page](https://raw.githubusercontent.com/himanshuyadav14/netflix-gpt/refs/heads/master/public/screenshot/03-Signup.png)
+
+- Browse Page
+
+  ![Browse Page](https://raw.githubusercontent.com/himanshuyadav14/netflix-gpt/refs/heads/master/public/screenshot/04-Browse.png)
+
+- Movie List
+
+  ![Movie List](https://raw.githubusercontent.com/himanshuyadav14/netflix-gpt/refs/heads/master/public/screenshot/05-Movie-List.png)
+
+- Shimmer Loading
+
+  ![Shimmer Loading](https://raw.githubusercontent.com/himanshuyadav14/netflix-gpt/refs/heads/master/public/screenshot/06-Shimmer-loading.png)
+
+- Search Page
+
+  ![Search Page](https://raw.githubusercontent.com/himanshuyadav14/netflix-gpt/refs/heads/master/public/screenshot/07-Search.png)
+
+- Watch Now Page
+
+  ![Watch Now Page](https://raw.githubusercontent.com/himanshuyadav14/netflix-gpt/refs/heads/master/public/screenshot/08-Watch.png)
+
+## 💖 Support This Project  
+
+Thank you for exploring **NetflixGPT**! This project was built with passion using **React.js**, **Tailwind CSS**, and **AI-powered recommendations** to deliver an intuitive and dynamic movie-browsing experience.  
+
+Your support and feedback are invaluable!  
+- ⭐ Star this repo if you found it useful!  
+- 🛠️ Feel free to contribute by opening issues or pull requests.  
+- 🤝 Connect with me on **[LinkedIn](https://linkedin.com/in/himanshuyadav14)**.  
+
+Made with ❤️ and React.  
+Happy Coding! 🚀 
+## 🙏 Thank You 🙏
